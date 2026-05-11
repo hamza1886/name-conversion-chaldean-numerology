@@ -1,11 +1,24 @@
-alphabet_map = {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5,
-                'F': 8, 'G': 3, 'H': 5,
-                'I': 1,
-                'J': 1, 'K': 2, 'L': 3, 'M': 4, 'N': 5,
-                'O': 7, 'P': 8,
-                'Q': 1, 'R': 2, 'S': 3, 'T': 4,
-                'U': 6, 'V': 6, 'W': 6,
-                'X': 5, 'Y': 1, 'Z': 7}
+alphabet_map = {
+    # english letters
+    'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5,
+    'F': 8, 'G': 3, 'H': 5,
+    'I': 1,
+    'J': 1, 'K': 2, 'L': 3, 'M': 4, 'N': 5,
+    'O': 7, 'P': 8,
+    'Q': 1, 'R': 2, 'S': 3, 'T': 4,
+    'U': 6, 'V': 6, 'W': 6,
+    'X': 5, 'Y': 1, 'Z': 7,
+
+    # arabic letters
+    'ا': 1, 'ب': 2, 'پ': 2, 'ج': 3, 'چ': 3, 'د': 4, 'ڈ': 4,
+    'ہ': 5, 'و': 6, 'ز': 7, 'ژ': 7,
+    'ح': 8, 'ط': 9, 'ی': 10,
+    'ک': 20, 'گ': 20, 'ل': 30, 'م': 40, 'ن': 50,
+    'س': 60, 'ع': 70, 'ف': 80, 'ص': 90,
+    'ق': 100, 'ر': 200, 'ڑ': 200, 'ش': 300, 'ت': 400, 'ٹ': 400,
+    'ث': 500, 'خ': 600, 'ذ': 700,
+    'ض': 800, 'ظ': 900, 'غ': 1000,
+}
 
 number_map = {
     1: "Number 1 - The Sun, golden, ruby. The brightest star in the sky, without which we wouldn’t be here. As such, symbolises leadership, and the one that everybody looks up to. This number stands for the forefront of creative capabilities, enduring strength, focus and positivity. Nothing holds Number 1 in their quest to rise to the top.",
@@ -67,9 +80,9 @@ def reduce_number_to_single_digit(num: int) -> int:
     return num if num <= 9 else reduce_number_to_single_digit(num - 9)
 
 
-def map_name_to_number(names: list) -> dict:
-    global alphabet_map
+def map_name_to_number(user_input: str) -> dict:
     name_num_map = {}
+    names = user_input.split()
 
     for name in names:
         name_num_map[name] = sum([alphabet_map[c] for c in name.upper()])
@@ -77,28 +90,33 @@ def map_name_to_number(names: list) -> dict:
     return name_num_map
 
 
-if __name__ == '__main__':
+def main():
     while True:
         try:
             user_input = input('\nEnter name (space separated): ')
-            user_input_list = user_input.split()
-            name_number_map = map_name_to_number(user_input_list)
+            name_number_map = map_name_to_number(user_input)
+            name_numbers = []
 
             for name, compound_number in name_number_map.items():
                 name_number = reduce_number_to_single_digit(compound_number)
+                name_numbers.append(name_number)
 
                 print(f'{name} = {compound_number} -> {name_number}')
                 print(f'  {number_map[name_number]}')
                 print()
 
-            full_name_number = sum([reduce_number_to_single_digit(i) for i in name_number_map.values()])
-            single_digit = reduce_number_to_single_digit(full_name_number)
+            if len(name_numbers) > 1:
+                full_name_number = sum(name_numbers)
+                single_digit = reduce_number_to_single_digit(full_name_number)
 
-            print(' '.join(name_number_map.keys()) + ' = ', end='')
-            print(full_name_number, end='')
-            print(' -> ', end='')
-            print(single_digit)
-            print(f'  {number_map[single_digit]}')
-            print(f'  {number_map[full_name_number]}')
+                print(f"{' '.join(name_number_map.keys())} = {full_name_number} -> {single_digit}")
+                print(f'  {number_map[single_digit]}')
+
+                if single_digit != full_name_number:
+                    print(f'  {number_map[full_name_number]}')
         except KeyboardInterrupt:
             exit()
+
+
+if __name__ == '__main__':
+    main()
